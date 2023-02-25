@@ -1,3 +1,5 @@
+<pre>
+
 1 snapdrop:
     image: "node:lts-alpine"
     user: "node"
@@ -30,3 +32,6 @@
      proxy_set_header Upgrade $http_upgrade;
      proxy_set_header X-Forwarded-for $remote_addr;
   }
+
+
+</pre>
