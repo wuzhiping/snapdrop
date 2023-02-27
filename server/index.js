@@ -82,7 +82,7 @@ class SnapdropServer {
 
     _joinRoom(peer) {
         if(ip.isPrivate(peer.ip)){
-            peer.ip = ip.cidrSubnet(peer.ip + '/20').broadcastAddress;
+            peer.ip = ip.cidrSubnet(peer.ip + '/24').networkAddress; //broadcastAddress;
         }
 	    
         // if room doesn't exist, create it
