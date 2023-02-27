@@ -1,4 +1,6 @@
 var process = require('process')
+var ip = require('ip');
+
 // Handle SIGINT
 process.on('SIGINT', () => {
   console.info("SIGINT Received, exiting...")
@@ -79,6 +81,10 @@ class SnapdropServer {
     }
 
     _joinRoom(peer) {
+        if(ip.isPrivate(peer.ip)){
+            peer.ip = ip.cidrSubnet(peer.ip + '/20').broadcastAddress;
+        }
+	    
         // if room doesn't exist, create it
         if (!this._rooms[peer.ip]) {
             this._rooms[peer.ip] = {};
@@ -233,7 +239,8 @@ class Peer {
         })
 
 	// console.dir(req.headers);
-        let from = req.headers['x-forwarded-for'] || "";
+        let from =  req.headers['client-ip'] || req.headers['x-forwarded-for'] || "";
+        if(from) from = ip.toLong(from) % 1000;
 
         this.name = {
             model: ua.device.model,
@@ -241,7 +248,7 @@ class Peer {
             browser: ua.browser.name,
             type: ua.device.type,
             deviceName,
-            displayName: displayName + " @"+ from
+            displayName: displayName + "@"+ from
         };
     }
 
